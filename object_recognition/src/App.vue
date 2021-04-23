@@ -105,6 +105,7 @@ export default {
           }
       })
     },
+    
     async createModel() {
         //const recognizer = speechCommands.create('BROWSER_FFT', '18w')
         // (1) try replacing the '18w' function argument with 'directional4w'.
