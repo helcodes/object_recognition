@@ -6,6 +6,10 @@
           {{ device.label }}
         </option>
       </select>
+
+      <input v-model="username">
+
+
       <table class="margin-10">
         <tr class="top-row" v-if="topPrediction != null">
           <td>{{ topPrediction.name }}</td>
@@ -84,6 +88,7 @@ export default {
     })
 
     this.webSocket=new WebSocket('ws://localhost:8081')
+    //this.webSocket=new WebSocket('wss://a91cdfc1ad7d.nrgrok.io')
   },
   methods: {
     async setupRecognizer (deviceId) {
@@ -141,6 +146,7 @@ export default {
 
         const message = {
           detectionType: 'speech',
+          username: this.username,
           className: this.topPrediction.name,
           score: this.topPrediction.score
         }
