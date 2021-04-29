@@ -37,7 +37,7 @@ export default {
       baseModel: 'mobilenet_v2',
       isModelReady: false,
       predictions: [],
-      synth: window.speechSynthesis,
+      //synth: window.speechSynthesis,
       lastPrediction: ''
     }
   },
@@ -60,6 +60,7 @@ export default {
       })
     })
     
+    this.webSocket = new WebSocket('ws://localhost:8081')
   },
   methods: {
     
@@ -140,10 +141,22 @@ export default {
             maxPrediction = prediction
           }
       })
-      if (! this.synth.speaking && this.lastPrediction != maxPrediction.className) {
+
+
+      if (this.lastPrediction != maxPrediction.className) {
+          const message = {
+            type: 'image',
+            className: maxPrediction.className,
+            confidence: maxPrediction.probability
+          }
+          this.webSocket.send(JSON.stringify(message))
+          this.lastPrediction = maxPrediction.className
+        }
+
+      /*if (! this.synth.speaking && this.lastPrediction != maxPrediction.className) {
         this.speak(maxPrediction.className)
         this.lastPrediction = maxPrediction.className
-      }
+      }*/
     },
 
     speak (prediction) {
