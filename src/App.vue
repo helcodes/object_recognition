@@ -25,6 +25,7 @@ import * as tf from '@tensorflow/tfjs'
 //import * as cocoSsd from '@tensorflow-models/coco-ssd'
 import * as tmImage from '@teachablemachine/image'//teachable machine
 //import * as tmImage from '@tensorflow-models/speech-commands'//teachable machine
+// about:config privacy.resistFingerprinting -> true - gives access to microphone
 export default {
   name: 'App',
   components: {
@@ -63,6 +64,7 @@ export default {
     })
     
     this.webSocket = new WebSocket('ws://localhost:8081')
+    //this.webSocket=new WebSocket('wss://a91cdfc1ad7d.nrgrok.io')
   },
   methods: {
     
