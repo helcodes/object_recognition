@@ -6,6 +6,7 @@
             {{ device.label }}
         </option>
     </select>
+      <input class="margin-10 text-input" type="text" v-model="username" placeholder="Username">
     <div id="result-frame">
       <video ref="video" autoplay></video>
       <canvas ref="canvas" :width="resultWidth" :height="resultHeight"></canvas>
@@ -37,8 +38,9 @@ export default {
       baseModel: 'mobilenet_v2',
       isModelReady: false,
       predictions: [],
-      //synth: window.speechSynthesis,
-      lastPrediction: ''
+      synth: window.speechSynthesis,
+      lastPrediction: '',
+      username: ''
     }
   },
   mounted () {
@@ -146,11 +148,13 @@ export default {
       if (this.lastPrediction != maxPrediction.className) {
           const message = {
             type: 'image',
+            username: this.username,
             className: maxPrediction.className,
             confidence: maxPrediction.probability
           }
           this.webSocket.send(JSON.stringify(message))
           this.lastPrediction = maxPrediction.className
+          this.speak(maxPrediction.className)
         }
 
       /*if (! this.synth.speaking && this.lastPrediction != maxPrediction.className) {
