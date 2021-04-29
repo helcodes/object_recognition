@@ -30,6 +30,7 @@
 <script>
 import * as tf from '@tensorflow/tfjs'
 import * as speechCommands from '@tensorflow-models/speech-commands'
+//about:config -> privacy.resistFingerprinting to true -> gives access to microphones
 export default {
   name: 'App',
   components: {
@@ -38,9 +39,11 @@ export default {
     return {
       isModelReady: false,
       predictions: [],
+      lastPrediction: null,
       audioTrackConstraints: {},
       audioDevices: [],
-      audioDevice: ''
+      audioDevice: '',
+      username: ''
     }
   },
   watch: {
@@ -144,14 +147,22 @@ export default {
             })
         })
 
-        const message = {
-          detectionType: 'speech',
-          username: this.username,
-          className: this.topPrediction.name,
-          score: this.topPrediction.score
+
+        if (this.lastPrediction == null) {
+          this.lastPrediction = this.topPrediction
         }
-        console.log(message)
-        this.webSocket.send(JSON.stringify(message));
+        else if (this.lastPrediction.name != this.topPrediction.name) {
+
+          const message = {
+            detectionType: 'speech',
+            username: this.username,
+            className: this.topPrediction.name,
+            score: this.topPrediction.score
+          }
+          console.log(message)
+          this.webSocket.send(JSON.stringify(message));
+          this.lastPrediction = this.topPrediction
+        }
     }
   }
 }
